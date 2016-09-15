@@ -1,0 +1,7 @@
+name 'ffmpeg'
+maintainer 'Huy Tran'
+maintainer_email 'huy.tranvan@pixta.co.jp'
+license 'all_rights'
+description 'Installs/Configures ffmpeg'
+long_description 'Installs/Configures ffmpeg'
+version '0.1.0'

@@ -1,5 +1,5 @@
 # update package database
-execute "yum update"
+#execute "yum update -y"
 
 # install packages
 package ["autoconf", "automake", "cmake", "freetype-devel", "gcc", "gcc-c++", "git", "libtool", "make", "mercurial", "nasm", "pkgconfig", "zlib-devel"]

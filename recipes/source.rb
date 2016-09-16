@@ -1,35 +1,27 @@
 # Install yasm
-git "#{node[:ffmpeg][:source_path]}/yasm" do
-	repository 'git://github.com/yasm/yasm.git'
-  revision 'master'
-  action :sync
-end
-
 bash "install_yasm" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
-	cd yasm
+	curl -L -O http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
+	tar xzvf yasm-1.3.0.tar.gz
+	cd yasm-1.3.0
 	autoreconf -fiv
-	./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin"
-	make
-	make install
+	./configure --prefix="$HOME/ffmpeg_build"
+	make -j 4
+	sudo make install
 	make distclean
 	EOH
 end
 
 # Install x264
-git "#{node[:ffmpeg][:source_path]}/x264" do
-	repository 'git://git.videolan.org/x264'
-  revision 'master'
-  action :sync
-end
-
 bash "install_x264" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
-	cd x264
+	curl -L -O ftp://ftp.videolan.org/pub/x264/snapshots/x264-snapshot-20160915-2245.tar.bz2
+	tar xjf x264-snapshot-20160915-2245.tar.bz2
+	cd x264-snapshot-20160915-2245
 	export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" 
-	./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --enable-static
+	./configure --prefix="$HOME/ffmpeg_build" --enable-static
 	make
 	make install
 	make distclean
@@ -40,8 +32,9 @@ end
 bash "install_x265" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
-	hg clone https://bitbucket.org/multicoreware/x265
-	cd x265/build/linux
+	curl -L -O http://ftp.videolan.org/pub/videolan/x265/x265_2.0.tar.gz
+	tar xzvf x265_2.0.tar.gz
+	cd x265_2.0/build/linux
 	cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX="$HOME/ffmpeg_build" -DENABLE_SHARED:bool=off ../../source
 	make
 	make install
@@ -49,16 +42,12 @@ bash "install_x265" do
 end
 
 # Install libfdk_aac
-git "#{node[:ffmpeg][:source_path]}/fdk_aac" do
-	repository 'git://git.code.sf.net/p/opencore-amr/fdk-aac'
-  revision 'master'
-  action :sync
-end
-
 bash "install_libfdk_aac" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
-	cd fdk_aac
+	curl -L -O http://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-0.1.4.tar.gz
+	tar xzvf fdk-aac-0.1.4.tar.gz
+	cd fdk-aac-0.1.4
 	autoreconf -fiv
 	./configure --prefix="$HOME/ffmpeg_build" --disable-shared
 	make
@@ -74,7 +63,7 @@ bash "install_libmp3lame" do
 	curl -L -O http://downloads.sourceforge.net/project/lame/lame/3.99/lame-3.99.5.tar.gz
 	tar xzvf lame-3.99.5.tar.gz
 	cd lame-3.99.5
-	./configure --prefix="$HOME/ffmpeg_build" --bindir="$HOME/bin" --disable-shared --enable-nasm
+	./configure --prefix="$HOME/ffmpeg_build" --disable-shared --enable-nasm
 	make
 	make install
 	make distclean
@@ -82,16 +71,12 @@ bash "install_libmp3lame" do
 end
 
 # Install libopus
-git "#{node[:ffmpeg][:source_path]}/opus" do
-	repository 'http://git.opus-codec.org/opus.git'
-  revision 'master'
-  action :sync
-end
-
 bash "install_libfdk_aac" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
-	cd opus
+	curl -L -O https://archive.mozilla.org/pub/opus/opus-tools-0.1.9.tar.gz
+	tar xzvf opus-tools-0.1.9.tar.gz
+	cd opus-tools-0.1.9
 	autoreconf -fiv
 	export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig"
 	./configure --prefix="$HOME/ffmpeg_build" --disable-shared
@@ -105,7 +90,7 @@ end
 bash "install_libogg" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
-	curl -O http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.4.tar.gz
+	curl -L -O http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.4.tar.gz
 	tar xzvf libvorbis-1.3.4.tar.gz
 	cd libvorbis-1.3.4
 	LDFLAGS="-L$HOME/ffmeg_build/lib" 
@@ -118,16 +103,12 @@ bash "install_libogg" do
 end
 
 # Install libvpx
-git "#{node[:ffmpeg][:source_path]}/libvpx" do
-	repository 'https://chromium.googlesource.com/webm/libvpx.git'
-  revision 'master'
-  action :sync
-end
-
 bash "install_libvpx" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
-	cd libvpx
+	curl -L -O http://storage.googleapis.com/downloads.webmproject.org/releases/webm/libvpx-1.6.0.tar.bz2
+	tar xjf libvpx-1.6.0.tar.bz2
+	cd libvpx-1.6.0
 	./configure --prefix="$HOME/ffmpeg_build" --disable-examples
 	make
 	make install
@@ -136,17 +117,14 @@ bash "install_libvpx" do
 end
 
 # Install FFmpeg
-git "#{node[:ffmpeg][:source_path]}/ffmpeg" do
-	repository 'https://git.ffmpeg.org/ffmpeg.git'
-  revision 'master'
-  action :sync
-end
-
 bash "install_libvpx" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
+	curl -L -O http://ffmpeg.org/releases/ffmpeg-3.1.3.tar.bz2
+	tar xjf ffmpeg-3.1.3.tar.bz2
+	cd ffmpeg-3.1.3
 	PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" 
-	./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --bindir="$HOME/bin" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265
+	./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265
 	make
 	make install
 	make distclean

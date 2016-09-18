@@ -16,11 +16,11 @@ end
 # Install x264
 bash "install_x264" do
 	cwd "#{node[:ffmpeg][:source_path]}"
-	code <<-EOH
+  environment 'PKG_CONFIG_PATH' => "$HOME/ffmpeg_build/lib/pkgconfig"
+  code <<-EOH
 	curl -L -O ftp://ftp.videolan.org/pub/x264/snapshots/x264-snapshot-20160915-2245.tar.bz2
 	tar xjf x264-snapshot-20160915-2245.tar.bz2
 	cd x264-snapshot-20160915-2245
-	export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" 
 	./configure --prefix="$HOME/ffmpeg_build" --bindir="/usr/local/bin" --enable-static
 	make
 	make install
@@ -70,14 +70,13 @@ bash "install_libmp3lame" do
 end
 
 # Install libopus
-bash "install_libfdk_aac" do
+bash "install_libopus" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
 	curl -L -O https://archive.mozilla.org/pub/opus/opus-tools-0.1.9.tar.gz
 	tar xzvf opus-tools-0.1.9.tar.gz
 	cd opus-tools-0.1.9
 	autoreconf -fiv
-	export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig"
 	./configure --prefix="$HOME/ffmpeg_build" --disable-shared
 	make
 	make install
@@ -137,7 +136,6 @@ bash "install_ffmpeg" do
 	curl -L -O http://ffmpeg.org/releases/ffmpeg-3.1.3.tar.bz2
 	tar xjf ffmpeg-3.1.3.tar.bz2
 	cd ffmpeg-3.1.3
-	PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" 
 	./configure --prefix="$HOME/ffmpeg_build" --bindir="/usr/local/bin" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265
 	make
 	make install

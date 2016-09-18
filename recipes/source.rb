@@ -6,7 +6,7 @@ bash "install_yasm" do
 	tar xzvf yasm-1.3.0.tar.gz
 	cd yasm-1.3.0
 	autoreconf -fiv
-	./configure --prefix="$HOME/ffmpeg_build"
+	./configure --prefix="$HOME/ffmpeg_build" --bindir="/usr/local/bin"
 	make -j 4
 	sudo make install
 	make distclean
@@ -21,7 +21,7 @@ bash "install_x264" do
 	tar xjf x264-snapshot-20160915-2245.tar.bz2
 	cd x264-snapshot-20160915-2245
 	export PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" 
-	./configure --prefix="$HOME/ffmpeg_build" --enable-static
+	./configure --prefix="$HOME/ffmpeg_build" --bindir="/usr/local/bin" --enable-static
 	make
 	make install
 	make distclean
@@ -117,14 +117,14 @@ bash "install_libvpx" do
 end
 
 # Install FFmpeg
-bash "install_libvpx" do
+bash "install_ffmpeg" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
 	curl -L -O http://ffmpeg.org/releases/ffmpeg-3.1.3.tar.bz2
 	tar xjf ffmpeg-3.1.3.tar.bz2
 	cd ffmpeg-3.1.3
 	PKG_CONFIG_PATH="$HOME/ffmpeg_build/lib/pkgconfig" 
-	./configure --prefix="$HOME/ffmpeg_build" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265
+	./configure --prefix="$HOME/ffmpeg_build" --bindir="/usr/local/bin" --extra-cflags="-I$HOME/ffmpeg_build/include" --extra-ldflags="-L$HOME/ffmpeg_build/lib" --pkg-config-flags="--static" --enable-gpl --enable-nonfree --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libvorbis --enable-libvpx --enable-libx264 --enable-libx265
 	make
 	make install
 	make distclean

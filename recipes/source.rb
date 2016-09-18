@@ -75,8 +75,8 @@ bash "install_libopus" do
   environment "PKG_CONFIG_PATH" => "/root/ffmpeg_build/lib/pkgconfig"
 	code <<-EOH
 	curl -L -O http://downloads.xiph.org/releases/opus/opus-1.1.3.tar.gz
-	tar xzvf opus-tools-0.1.9.tar.gz
-	cd opus-tools-0.1.9
+	tar xzvf opus-1.1.3.tar.gz
+	cd opus-1.1.3
 	autoreconf -fiv
 	./configure --prefix="/root/ffmpeg_build" --disable-shared
 	make

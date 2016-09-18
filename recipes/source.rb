@@ -42,27 +42,12 @@ bash "install_x265" do
 end
 
 # Install libogg
-bash "install_libvorbis" do
+bash "install_libogg" do
 	cwd "#{node[:ffmpeg][:source_path]}"
 	code <<-EOH
 	curl -O http://downloads.xiph.org/releases/ogg/libogg-1.3.2.tar.gz
 	tar xzvf libogg-1.3.2.tar.gz
 	cd libogg-1.3.2
-	./configure --prefix="$HOME/ffmpeg_build" --disable-shared
-	make
-	make install
-	make distclean
-	EOH
-end
-
-# Install libfdk_aac
-bash "install_libfdk_aac" do
-	cwd "#{node[:ffmpeg][:source_path]}"
-	code <<-EOH
-	curl -L -O http://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-0.1.4.tar.gz
-	tar xzvf fdk-aac-0.1.4.tar.gz
-	cd fdk-aac-0.1.4
-	autoreconf -fiv
 	./configure --prefix="$HOME/ffmpeg_build" --disable-shared
 	make
 	make install
@@ -128,6 +113,21 @@ bash "install_libvpx" do
 	make install
 	make distclean
 	EOH
+end
+
+# Install libfdk_aac
+bash "install_libfdk_aac" do
+  cwd "#{node[:ffmpeg][:source_path]}"
+  code <<-EOH
+	curl -L -O http://downloads.sourceforge.net/project/opencore-amr/fdk-aac/fdk-aac-0.1.4.tar.gz
+	tar xzvf fdk-aac-0.1.4.tar.gz
+	cd fdk-aac-0.1.4
+	autoreconf -fiv
+	./configure --prefix="$HOME/ffmpeg_build" --disable-shared
+	make
+	make install
+	make distclean
+  EOH
 end
 
 # Install FFmpeg
